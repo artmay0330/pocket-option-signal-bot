@@ -1,10 +1,13 @@
 from analysis import analyze_market
+from validation import validate_signal
 
 
 def get_signal():
     """
-    Returns the completed signal generated
-    by the analysis engine.
+    Generate and validate a signal.
+
+    Returns None when there is no valid setup.
     """
 
-    return analyze_market()
+    signal = analyze_market()
+    return validate_signal(signal)
