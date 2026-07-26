@@ -1,7 +1,8 @@
+import os
 import requests
 
-BOT_TOKEN = "8312797274:AAG_NZ6qNgENzOgwNm1e3Sn8uYLeDhrj3Sg"
-CHAT_ID = "-1004300871453""
+BOT_TOKEN = os.environ["BOT_TOKEN"]
+CHAT_ID = os.environ["CHAT_ID"]
 
 message = "TEST SIGNAL"
 
