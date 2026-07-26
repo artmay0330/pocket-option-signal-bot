@@ -3,13 +3,12 @@ from datetime import datetime, timezone
 
 import requests
 
+from config import TEST_MODE
 from strategy import get_signal
 
 
 BOT_TOKEN = os.environ["BOT_TOKEN"]
 CHAT_ID = os.environ["CHAT_ID"]
-
-TEST_MODE = True
 
 
 def send_signal(signal):
