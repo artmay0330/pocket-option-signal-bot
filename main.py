@@ -1,4 +1,5 @@
 import os
+from datetime import datetime, timezone
 
 import requests
 
@@ -6,13 +7,23 @@ import requests
 BOT_TOKEN = os.environ["BOT_TOKEN"]
 CHAT_ID = os.environ["CHAT_ID"]
 
-MESSAGE = """
+ASSET = "EUR/USD OTC"
+DIRECTION = "BUY"
+EXPIRATION = "1 Minute"
+ENTRY = "Enter now"
+
+direction_icon = "🟢" if DIRECTION.upper() == "BUY" else "🔴"
+
+current_time = datetime.now(timezone.utc).strftime("%I:%M %p UTC")
+
+message = f"""
 🚨 BINARY OPTIONS SIGNAL
 
-Asset: EUR/USD OTC
-Direction: BUY 🟢
-Expiration: 1 Minute
-Entry: Enter now
+Asset: {ASSET}
+Direction: {DIRECTION.upper()} {direction_icon}
+Expiration: {EXPIRATION}
+Entry: {ENTRY}
+Time: {current_time}
 
 ⚠️ Test signal only
 """.strip()
@@ -23,7 +34,7 @@ response = requests.post(
     url,
     data={
         "chat_id": CHAT_ID,
-        "text": MESSAGE,
+        "text": message,
     },
     timeout=20,
 )
