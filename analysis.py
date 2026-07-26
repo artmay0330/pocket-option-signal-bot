@@ -1,26 +1,35 @@
+from config import ASSET, EXPIRATION, MINIMUM_CONFIDENCE
 from market import get_market_data
 
 
 def analyze_market():
     """
-    Converts market data into a trading signal.
-
-    Later this will contain your complete strategy.
+    Analyze market data and return either:
+    - A completed signal dictionary
+    - None when no valid setup exists
     """
 
     market = get_market_data()
 
-    if market["trend"] == "UP":
+    trend = market["trend"].upper()
+    confidence = int(market["strength"])
+
+    if confidence < MINIMUM_CONFIDENCE:
+        return None
+
+    if trend == "UP":
         direction = "BUY"
-    else:
+    elif trend == "DOWN":
         direction = "SELL"
+    else:
+        return None
 
     return {
-        "asset": "EUR/USD OTC",
+        "asset": ASSET,
         "direction": direction,
-        "expiration": "1 Minute",
+        "expiration": EXPIRATION,
         "entry": "Enter now",
         "risk": "Low",
-        "confidence": market["strength"],
-        "strategy": "Fib Pullback v1",
+        "confidence": confidence,
+        "strategy": "Trend Strength v1",
     }
