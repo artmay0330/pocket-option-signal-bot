@@ -3,6 +3,8 @@ from datetime import datetime, timezone
 
 import requests
 
+from strategy import get_signal
+
 
 # =========================
 # TELEGRAM CONFIGURATION
@@ -11,18 +13,6 @@ import requests
 BOT_TOKEN = os.environ["BOT_TOKEN"]
 CHAT_ID = os.environ["CHAT_ID"]
 
-
-# =========================
-# SIGNAL CONFIGURATION
-# =========================
-
-ASSET = "EUR/USD OTC"
-DIRECTION = "BUY"
-EXPIRATION = "1 Minute"
-ENTRY = "Enter now"
-RISK = "Low"
-CONFIDENCE = 92
-STRATEGY = "Fib Pullback v1"
 TEST_MODE = True
 
 
@@ -30,16 +20,8 @@ TEST_MODE = True
 # TELEGRAM FUNCTION
 # =========================
 
-def send_signal(
-    asset,
-    direction,
-    expiration,
-    entry,
-    risk,
-    confidence,
-    strategy,
-):
-    direction = direction.upper()
+def send_signal(signal):
+    direction = signal["direction"].upper()
 
     if direction == "BUY":
         direction_icon = "🟢"
@@ -55,13 +37,13 @@ def send_signal(
     message = f"""
 🚨 BINARY OPTIONS SIGNAL
 
-Asset: {asset}
+Asset: {signal["asset"]}
 Direction: {direction} {direction_icon}
-Expiration: {expiration}
-Entry: {entry}
-Risk: {risk}
-Confidence: {confidence}%
-Strategy: {strategy}
+Expiration: {signal["expiration"]}
+Entry: {signal["entry"]}
+Risk: {signal["risk"]}
+Confidence: {signal["confidence"]}%
+Strategy: {signal["strategy"]}
 Time: {current_time}{test_warning}
 """.strip()
 
@@ -85,12 +67,5 @@ Time: {current_time}{test_warning}
 # RUN BOT
 # =========================
 
-send_signal(
-    asset=ASSET,
-    direction=DIRECTION,
-    expiration=EXPIRATION,
-    entry=ENTRY,
-    risk=RISK,
-    confidence=CONFIDENCE,
-    strategy=STRATEGY,
-)
+signal = get_signal()
+send_signal(signal)
