@@ -6,32 +6,17 @@ import requests
 from strategy import get_signal
 
 
-# =========================
-# TELEGRAM CONFIGURATION
-# =========================
-
 BOT_TOKEN = os.environ["BOT_TOKEN"]
 CHAT_ID = os.environ["CHAT_ID"]
 
 TEST_MODE = True
 
 
-# =========================
-# TELEGRAM FUNCTION
-# =========================
-
 def send_signal(signal):
-    direction = signal["direction"].upper()
-
-    if direction == "BUY":
-        direction_icon = "🟢"
-    elif direction == "SELL":
-        direction_icon = "🔴"
-    else:
-        raise ValueError("Direction must be BUY or SELL.")
+    direction = signal["direction"]
+    direction_icon = "🟢" if direction == "BUY" else "🔴"
 
     current_time = datetime.now(timezone.utc).strftime("%I:%M %p UTC")
-
     test_warning = "\n\n⚠️ Test signal only" if TEST_MODE else ""
 
     message = f"""
@@ -59,13 +44,18 @@ Time: {current_time}{test_warning}
     )
 
     response.raise_for_status()
-
     print("Signal sent successfully.")
 
 
-# =========================
-# RUN BOT
-# =========================
+def main():
+    signal = get_signal()
 
-signal = get_signal()
-send_signal(signal)
+    if signal is None:
+        print("No valid signal. Nothing was sent.")
+        return
+
+    send_signal(signal)
+
+
+if __name__ == "__main__":
+    main()
